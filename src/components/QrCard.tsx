@@ -2,14 +2,36 @@ import { useState } from "react";
 import QRCode from "qrcode.react";
 import axios from "axios";
 import { Input, Button } from "@chakra-ui/react";
+import {
+  Table,
+  Thead,
+  Tbody,
+  Tfoot,
+  Tr,
+  Th,
+  Td,
+  TableCaption,
+  TableContainer,
+} from "@chakra-ui/react";
 
 function QrCard() {
   const [book, setBook] = useState({
     name: "",
     isbn: "",
     url: "",
-    api: { title: "" },
+    api: {
+      title: "",
+      subTitle: "",
+      authors: "",
+      description: "",
+      publishedDate: "",
+      thumbnail: "",
+    },
   });
+  const baseUrl =
+    "https://www.lib.city.ota.tokyo.jp/detailresult?3&target1=1&isbn=";
+
+  const issThumbnailBaseUrl = "https://iss.ndl.go.jp/thumbnail/";
 
   const ApiFetch: any = () => {
     axios
@@ -17,13 +39,21 @@ function QrCard() {
       .then((response) => {
         //setIsbnApi(response.data.items[0].volumeInfo.title);
         const res = response.data.items[0].volumeInfo;
-        setBook({ ...book, api: { title: res.title } });
+        setBook({
+          ...book,
+          url: baseUrl + book.isbn,
+          api: {
+            title: res.title,
+            subTitle: res.subTitle,
+            authors: res.authors,
+            description: res.description,
+            publishedDate: res.publishedDate,
+            thumbnail: res.imageLinks.thumbnail,
+          },
+        });
+        console.log(response.data.items[0]);
       });
-    setBook({ ...book, url: baseUrl + book.isbn });
   };
-
-  const baseUrl =
-    "https://www.lib.city.ota.tokyo.jp/detailresult?3&target1=1&isbn=";
 
   function handleSubmit(e: any) {
     console.log(book);
@@ -42,26 +72,32 @@ function QrCard() {
           <div>
             <QRCode value={book.url}></QRCode>
             <br />
-            <table>
-              <thead>
-                <tr>
-                  <td>label</td>
-                  <td>content</td>
-                </tr>
-              </thead>
-              <tbody>
-                {Object.entries(book.api).map(([key, value]) => {
-                  return (
-                    <tr key={key}>
-                      <td>{key}</td>
-                      <td>{value}</td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-            Image:
-            <img src={"https://iss.ndl.go.jp/thumbnail/" + book.isbn}></img>
+            <TableContainer>
+              <Table>
+                <Thead>
+                  <Tr>
+                    <Td>label</Td>
+                    <Td>content</Td>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {Object.entries(book.api).map(([key, value]) => {
+                    return (
+                      <Tr key={key}>
+                        <Td>{key}</Td>
+                        <Td>
+                          {key === "thumbnail" ? (
+                            <img src={value}></img>
+                          ) : (
+                            value
+                          )}
+                        </Td>
+                      </Tr>
+                    );
+                  })}
+                </Tbody>
+              </Table>
+            </TableContainer>
           </div>
         ) : (
           ""
