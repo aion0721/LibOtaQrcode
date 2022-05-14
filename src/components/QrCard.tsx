@@ -1,7 +1,7 @@
 import { useState } from "react";
 import QRCode from "qrcode.react";
 import axios from "axios";
-import { Input, Button } from "@chakra-ui/react";
+import { Input, Button, Box } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
 import {
   Table,
@@ -14,6 +14,7 @@ import {
   TableCaption,
   TableContainer,
 } from "@chakra-ui/react";
+import { useQRCode } from "next-qrcode";
 
 function QrCard() {
   const [book, setBook] = useState({
@@ -29,6 +30,8 @@ function QrCard() {
       thumbnail: "",
     },
   });
+  const { Canvas } = useQRCode();
+
   const baseUrl =
     "https://www.lib.city.ota.tokyo.jp/detailresult?3&target1=1&isbn=";
 
@@ -58,16 +61,21 @@ function QrCard() {
 
   function handleSubmit(e: any) {
     console.log(book);
+    console.log(<Canvas text="aaa"></Canvas>);
   }
 
   const handleChange: any = (e: any) => {
     setBook({ ...book, isbn: e.target.value.replace("-", "") });
   };
   return (
-    <div>
+    <Box>
       <form>
         ISBN:<Input type="text" id="isbn" onChange={handleChange}></Input>
-        <Button rightIcon={<SearchIcon />} onClick={(e) => ApiFetch()}>
+        <Button
+          colorScheme="teal"
+          rightIcon={<SearchIcon />}
+          onClick={(e) => ApiFetch()}
+        >
           Search
         </Button>
         <Button onClick={(e) => handleSubmit(e)}>Debug</Button>
@@ -106,7 +114,7 @@ function QrCard() {
           ""
         )}
       </form>
-    </div>
+    </Box>
   );
 }
 
