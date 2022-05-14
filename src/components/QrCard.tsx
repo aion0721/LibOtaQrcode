@@ -2,6 +2,7 @@ import { useState } from "react";
 import QRCode from "qrcode.react";
 import axios from "axios";
 import { Input, Button } from "@chakra-ui/react";
+import { SearchIcon } from "@chakra-ui/icons";
 import {
   Table,
   Thead,
@@ -21,7 +22,7 @@ function QrCard() {
     url: "",
     api: {
       title: "",
-      subTitle: "",
+      subtitle: "",
       authors: "",
       description: "",
       publishedDate: "",
@@ -44,7 +45,7 @@ function QrCard() {
           url: baseUrl + book.isbn,
           api: {
             title: res.title,
-            subTitle: res.subTitle,
+            subtitle: res.subtitle,
             authors: res.authors,
             description: res.description,
             publishedDate: res.publishedDate,
@@ -66,14 +67,16 @@ function QrCard() {
     <div>
       <form>
         ISBN:<Input type="text" id="isbn" onChange={handleChange}></Input>
-        <Button onClick={(e) => ApiFetch()}>Search</Button>
+        <Button rightIcon={<SearchIcon />} onClick={(e) => ApiFetch()}>
+          Search
+        </Button>
         <Button onClick={(e) => handleSubmit(e)}>Debug</Button>
         {book.api.title != "" ? (
           <div>
             <QRCode value={book.url}></QRCode>
             <br />
             <TableContainer>
-              <Table>
+              <Table variant="simple">
                 <Thead>
                   <Tr>
                     <Td>label</Td>
