@@ -18,7 +18,7 @@ function App() {
   return (
     <ChakraProvider theme={theme}>
       <div className="App">
-        <Container w="80%">
+        <Container w="100%">
           <Header />
           <QrCard />
         </Container>

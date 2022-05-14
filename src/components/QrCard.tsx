@@ -1,7 +1,7 @@
 import { useState } from "react";
 import QRCode from "qrcode.react";
 import axios from "axios";
-import { Input, Button, Box } from "@chakra-ui/react";
+import { Input, Button, Box, Center } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
 import {
   Table,
@@ -22,12 +22,12 @@ function QrCard() {
     isbn: "",
     url: "",
     api: {
-      title: "",
-      subtitle: "",
-      authors: "",
-      description: "",
-      publishedDate: "",
-      thumbnail: "",
+      書籍名: "",
+      副書籍名: "",
+      著者: "",
+      詳細: "",
+      発行日: "",
+      書影: "",
     },
   });
   const { Canvas } = useQRCode();
@@ -47,12 +47,12 @@ function QrCard() {
           ...book,
           url: baseUrl + book.isbn,
           api: {
-            title: res.title,
-            subtitle: res.subtitle,
-            authors: res.authors,
-            description: res.description,
-            publishedDate: res.publishedDate,
-            thumbnail: res.imageLinks.thumbnail,
+            書籍名: res.title,
+            副書籍名: res.subtitle,
+            著者: res.authors,
+            詳細: res.description,
+            発行日: res.publishedDate,
+            書影: res.imageLinks.thumbnail,
           },
         });
         console.log(response.data.items[0]);
@@ -79,9 +79,11 @@ function QrCard() {
           Search
         </Button>
         <Button onClick={(e) => handleSubmit(e)}>Debug</Button>
-        {book.api.title != "" ? (
+        {book.api.書籍名 != "" ? (
           <div>
-            <QRCode value={book.url}></QRCode>
+            <Center>
+              <QRCode value={book.url}></QRCode>
+            </Center>
             <br />
             <TableContainer>
               <Table variant="simple">
@@ -97,11 +99,7 @@ function QrCard() {
                       <Tr key={key}>
                         <Td>{key}</Td>
                         <Td>
-                          {key === "thumbnail" ? (
-                            <img src={value}></img>
-                          ) : (
-                            value
-                          )}
+                          {key === "書影" ? <img src={value}></img> : value}
                         </Td>
                       </Tr>
                     );
