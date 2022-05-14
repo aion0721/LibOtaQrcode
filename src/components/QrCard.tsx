@@ -4,28 +4,22 @@ import axios from "axios";
 import { Input, Button } from "@chakra-ui/react";
 
 function QrCard() {
-  const [isbn, setIsbn] = useState("");
-  const [url, setUrl] = useState("");
-  const [isbnApi, setIsbnApi] = useState("");
   const [book, setBook] = useState({
     name: "",
     isbn: "",
     url: "",
-    api: {},
+    api: { title: "" },
   });
 
   const ApiFetch: any = () => {
-    console.log("https://www.googleapis.com/books/v1/volumes?q=isbn:" + isbn);
     axios
-      .get("https://www.googleapis.com/books/v1/volumes?q=isbn:" + isbn)
+      .get("https://www.googleapis.com/books/v1/volumes?q=isbn:" + book.isbn)
       .then((response) => {
         //setIsbnApi(response.data.items[0].volumeInfo.title);
-        setBook({ ...book, api: response.data });
+        const res = response.data.items[0].volumeInfo;
+        setBook({ ...book, api: { title: res.title } });
       });
-    console.log(isbnApi);
-    setBook({ ...book, url: baseUrl + isbn });
-
-    setUrl(baseUrl + isbn);
+    setBook({ ...book, url: baseUrl + book.isbn });
   };
 
   const baseUrl =
@@ -36,7 +30,6 @@ function QrCard() {
   }
 
   const handleChange: any = (e: any) => {
-    setIsbn(e.target.value.replace("-", ""));
     setBook({ ...book, isbn: e.target.value.replace("-", "") });
   };
   return (
@@ -45,20 +38,34 @@ function QrCard() {
         ISBN:<Input type="text" id="isbn" onChange={handleChange}></Input>
         <Button onClick={(e) => ApiFetch()}>Search</Button>
         <Button onClick={(e) => handleSubmit(e)}>Debug</Button>
-        {url ? <QRCode value={book.url}></QRCode> : ""}
-        <br />
-        Title: {isbnApi}
-        Image:{" "}
-        {url ? (
-          <img
-            src={
-              book.isbn ? "https://iss.ndl.go.jp/thumbnail/" + book.isbn : ""
-            }
-          ></img>
+        {book.api.title != "" ? (
+          <div>
+            <QRCode value={book.url}></QRCode>
+            <br />
+            <table>
+              <thead>
+                <tr>
+                  <td>label</td>
+                  <td>content</td>
+                </tr>
+              </thead>
+              <tbody>
+                {Object.entries(book.api).map(([key, value]) => {
+                  return (
+                    <tr key={key}>
+                      <td>{key}</td>
+                      <td>{value}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+            Image:
+            <img src={"https://iss.ndl.go.jp/thumbnail/" + book.isbn}></img>
+          </div>
         ) : (
           ""
         )}
-        {url}
       </form>
     </div>
   );
