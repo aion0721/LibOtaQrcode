@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import QRCode from "qrcode.react";
 import axios from "axios";
 import { Input, Button, Box, Center } from "@chakra-ui/react";
@@ -16,10 +16,16 @@ import {
 } from "@chakra-ui/react";
 import { useQRCode } from "next-qrcode";
 
-function QrCard() {
+type Props = {
+  isbn?: string;
+};
+
+const QrCard = (props: Props) => {
+  const propsIsbn = props.isbn ?? "";
+  console.log(props.isbn);
   const [book, setBook] = useState({
     name: "",
-    isbn: "",
+    isbn: propsIsbn,
     url: "",
     api: {
       書籍名: "",
@@ -67,6 +73,10 @@ function QrCard() {
   const handleChange: any = (e: any) => {
     setBook({ ...book, isbn: e.target.value.replace("-", "") });
   };
+
+  useEffect(() => {
+    book.isbn ? ApiFetch() : "";
+  }, []);
   return (
     <Box>
       <form>
@@ -114,6 +124,6 @@ function QrCard() {
       </form>
     </Box>
   );
-}
+};
 
 export default QrCard;

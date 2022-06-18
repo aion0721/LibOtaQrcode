@@ -6,6 +6,7 @@ import Header from "./components/Header";
 import "./App.css";
 
 function App() {
+  const params = location.pathname.replace("/", "");
   const theme = extendTheme({
     styles: {
       global: {
@@ -21,8 +22,7 @@ function App() {
       <div className="App">
         <Container w="100%">
           <Header />
-          <hr />
-          <QrCard />
+          <QrCard isbn={params} />
         </Container>
       </div>
     </ChakraProvider>
