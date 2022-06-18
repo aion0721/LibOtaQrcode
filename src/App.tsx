@@ -3,6 +3,7 @@ import "./App.css";
 import QrCard from "./components/QrCard";
 import { ChakraProvider, extendTheme, Container } from "@chakra-ui/react";
 import Header from "./components/Header";
+import "./App.css";
 
 function App() {
   const theme = extendTheme({
@@ -20,6 +21,7 @@ function App() {
       <div className="App">
         <Container w="100%">
           <Header />
+          <hr />
           <QrCard />
         </Container>
       </div>
